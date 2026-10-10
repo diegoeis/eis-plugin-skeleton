@@ -14,12 +14,14 @@ Plugin for Claude Code and Cowork that creates the folder structure of a plugin 
 | Skill | What it does |
 | --- | --- |
 | [`skel-init`](src/skills/skel-init) | Creates a new plugin project from the template: `src/`, `docs/`, `scripts/pack.sh`, README, AGENTS.md and CLAUDE.md. |
+| [`skel-migrate`](src/skills/skel-migrate) | Moves an existing plugin into this structure: proposes a plan, waits for approval, only moves existing files and creates the missing ones. |
 | [`skel-build`](src/skills/skel-build) | Bumps the plugin version (patch by default) and runs `scripts/pack.sh` to build `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. |
 
 Usage:
 
 ```
 /eis-setup-plugin:skel-init [folder-path]
+/eis-setup-plugin:skel-migrate [folder-path]
 /eis-setup-plugin:skel-build [version]
 ```
 

@@ -6,7 +6,7 @@ argument-hint: "[folder-path]"
 
 # skel-init
 
-Creates the initial structure of a plugin project by copying the template at `${CLAUDE_SKILL_DIR}/assets/folder-template/`. The template is the source of truth: copy its files, don't rewrite them from memory. That is what guarantees every project comes out the same.
+Creates the initial structure of a plugin project by copying the template at `${CLAUDE_PLUGIN_ROOT}/templates/project/`. The template is the source of truth: copy its files, don't rewrite them from memory. That is what guarantees every project comes out the same.
 
 The point of the structure is to separate what belongs to the project from what belongs to the plugin. `src/` is the plugin root and the only thing that goes into the package. `docs/`, `scripts/`, `README.md`, `AGENTS.md` and `CLAUDE.md` belong to the project and stay out of the zip.
 
@@ -47,7 +47,7 @@ Only now create the folder (if it doesn't exist) and copy:
 
 ```bash
 mkdir -p "<destination>"
-cp -R "${CLAUDE_SKILL_DIR}/assets/folder-template/." "<destination>/"
+cp -R "${CLAUDE_PLUGIN_ROOT}/templates/project/." "<destination>/"
 mkdir -p "<destination>/docs" "<destination>/src/skills"
 cp "<destination>/scripts/pii-patterns.example.txt" "<destination>/scripts/pii-patterns.txt"
 chmod +x "<destination>/scripts/pack.sh"
