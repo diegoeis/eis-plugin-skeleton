@@ -47,8 +47,11 @@ Só agora crie a pasta (se não existir) e copie:
 mkdir -p "<destino>"
 cp -R "${CLAUDE_SKILL_DIR}/assets/folder-template/." "<destino>/"
 mkdir -p "<destino>/docs" "<destino>/src/skills"
+cp "<destino>/scripts/pii-patterns.example.txt" "<destino>/scripts/pii-patterns.txt"
 chmod +x "<destino>/scripts/pack.sh"
 ```
+
+O `pii-patterns.txt` é a cópia local da lista de termos proibidos no pacote. Ele está no `.gitignore` do template, para a lista do usuário nunca ir para o repositório.
 
 O `/.` no fim da origem é o que copia também os arquivos ocultos (`.gitignore`, `.claude-plugin/`, `.gitkeep`). O `mkdir -p` garante as pastas vazias caso a instalação do plugin tenha descartado os `.gitkeep`, e o `chmod` garante o script executável caso a instalação tenha perdido a permissão.
 
@@ -91,6 +94,6 @@ Deve passar. Se der erro, corrija antes de entregar; se der aviso, mostre ao usu
 Mostre a árvore criada (`find "<destino>" -not -path '*/.git/*' | sort` ou `tree -a -I .git`) e os próximos passos, curtos:
 
 1. Coloque as skills em `src/skills/<nome-da-skill>/SKILL.md` (e agents, hooks etc. dentro de `src/`).
-2. Preencha `scripts/pii-patterns.txt` com o que não pode vazar no pacote (caminhos locais, e-mails, nomes internos).
+2. Preencha `scripts/pii-patterns.txt` com o que não pode vazar no pacote (caminhos locais, e-mails, nomes internos). Esse arquivo fica só na máquina dele, fora do git.
 3. Teste com `claude --plugin-dir ./src`.
 4. Para gerar uma versão, rode `./scripts/pack.sh`. Sai em `dist/vX.Y.Z/` e `dist/vX.Y.Z.zip`. O primeiro pacote sai como `0.1.0`; a partir do segundo, suba `version` em `src/.claude-plugin/plugin.json` antes.

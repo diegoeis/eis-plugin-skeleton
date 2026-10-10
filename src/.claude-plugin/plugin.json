@@ -1,6 +1,6 @@
 {
   "name": "eis-setup-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cria a estrutura de pastas de um projeto de plugin para Claude Code e Cowork: src/ como raiz do plugin, docs/, scripts/pack.sh e builds versionados em dist/.",
   "author": {
     "name": "Diego Eis"

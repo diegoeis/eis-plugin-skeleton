@@ -5,6 +5,6 @@
 - **`dist/` acumula versões** (`vX.Y.Z/` + `vX.Y.Z.zip`) e fica no `.gitignore`. O `pack.sh` recusa versão existente para forçar a subida de versão.
 - **Plugin isolado em `src/`.** `CLAUDE.md`, `AGENTS.md` e `README.md` ficam na raiz do projeto: um `CLAUDE.md` na raiz do plugin não é carregado e gera aviso no `claude plugin validate`.
 - **`CLAUDE.md` só importa `@AGENTS.md`.** Conteúdo num lugar só.
-- **Auditoria de dados pessoais por arquivo** (`scripts/pii-patterns.txt`), configurável por projeto.
+- **Auditoria de dados pessoais por arquivo** (`scripts/pii-patterns.txt`), configurável por projeto. O arquivo é local e fica no `.gitignore`: a lista de termos sensíveis não pode ir para um repositório público. O repo versiona só `pii-patterns.example.txt`. Sem o arquivo local, o `pack.sh` avisa e segue.
 - **Só Claude Code e Cowork** por enquanto.
 - **Fora do escopo da v0.1.0:** reorganizar um plugin que já existe.

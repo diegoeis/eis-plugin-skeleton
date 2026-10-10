@@ -27,7 +27,8 @@ meu-plugin/
 ├── docs/                   especificações e documentação do projeto
 ├── scripts/
 │   ├── pack.sh             gera o pacote em dist/
-│   └── pii-patterns.txt    padrões proibidos dentro de src/
+│   ├── pii-patterns.example.txt   modelo da lista de padrões
+│   └── pii-patterns.txt    padrões proibidos em src/ (local, fora do git)
 ├── dist/                   builds (fora do git)
 │   ├── vX.Y.Z/
 │   └── vX.Y.Z.zip
@@ -36,7 +37,7 @@ meu-plugin/
 └── README.md
 ```
 
-`pack.sh` lê `name` e `version` de `src/.claude-plugin/plugin.json`, roda `claude plugin validate`, procura em `src/` os padrões de `scripts/pii-patterns.txt` e gera `dist/vX.Y.Z/` e `dist/vX.Y.Z.zip`. Ele para se a versão já existir.
+`pack.sh` lê `name` e `version` de `src/.claude-plugin/plugin.json`, roda `claude plugin validate`, procura em `src/` os padrões de `scripts/pii-patterns.txt` (arquivo local, fora do git; o modelo é `pii-patterns.example.txt`) e gera `dist/vX.Y.Z/` e `dist/vX.Y.Z.zip`. Ele para se a versão já existir.
 
 Este repositório usa a mesma estrutura: o plugin está em `src/`.
 

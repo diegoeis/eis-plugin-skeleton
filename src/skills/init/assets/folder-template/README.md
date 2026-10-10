@@ -12,7 +12,8 @@
 ├── docs/                   especificações e documentação do projeto
 ├── scripts/
 │   ├── pack.sh             gera o pacote em dist/
-│   └── pii-patterns.txt    padrões proibidos dentro de src/
+│   ├── pii-patterns.example.txt   modelo da lista de padrões
+│   └── pii-patterns.txt    padrões proibidos em src/ (local, fora do git)
 ├── dist/                   builds gerados (fora do git)
 ├── AGENTS.md
 ├── CLAUDE.md
@@ -44,3 +45,5 @@ O script valida o plugin com `claude plugin validate`, procura em `src/` os padr
 - `dist/vX.Y.Z.zip` — o zip dessa pasta, pronto para importar
 
 Ele para se a versão já existir em `dist/`.
+
+`scripts/pii-patterns.txt` fica fora do git, para a sua lista de termos sensíveis não ir para o repositório. Quem clonar o projeto cria o seu a partir de `scripts/pii-patterns.example.txt`.

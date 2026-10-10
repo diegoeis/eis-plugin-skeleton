@@ -62,8 +62,12 @@ fi
 
 # Auditoria de dados pessoais: um padrão (regex estendida) por linha em
 # scripts/pii-patterns.txt. Linhas vazias e começadas por # são ignoradas.
+# O arquivo é local (fica no .gitignore); o modelo é scripts/pii-patterns.example.txt.
 # plugin.json fica de fora porque o autor aparece ali legitimamente.
-if [[ -f "$PII_FILE" ]]; then
+if [[ ! -f "$PII_FILE" ]]; then
+  echo "Aviso: scripts/pii-patterns.txt não existe; pulando a auditoria de dados pessoais." >&2
+  echo "       Copie scripts/pii-patterns.example.txt para scripts/pii-patterns.txt e preencha." >&2
+else
   # tr -d '\r' evita que um arquivo salvo com quebra de linha do Windows anule os padrões.
   PATTERNS="$(tr -d '\r' < "$PII_FILE" | grep -vE '^[[:space:]]*(#|$)' || true)"
   if [[ -n "$PATTERNS" ]]; then

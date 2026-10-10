@@ -1,0 +1,12 @@
+# Modelo do scripts/pii-patterns.txt.
+# Copie para scripts/pii-patterns.txt e preencha. O pii-patterns.txt fica fora
+# do git (.gitignore), então a sua lista nunca vai para o repositório.
+#
+# Padrões que NÃO podem aparecer dentro de src/ (dados pessoais, caminhos locais,
+# domínios e nomes internos). Um por linha, em regex estendida (grep -E).
+# Linhas com # são comentários. src/.claude-plugin/plugin.json é ignorado (autoria).
+#
+# Exemplos:
+# /Users/seu-usuario
+# seu-email@empresa\.com
+# nome-da-empresa-interna
