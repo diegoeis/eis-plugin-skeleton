@@ -10,7 +10,7 @@ Creates the initial structure of a plugin project by copying the template at `${
 
 The point of the structure is to separate what belongs to the project from what belongs to the plugin. `src/` is the plugin root and the only thing that goes into the package. `docs/`, `scripts/`, `README.md`, `AGENTS.md` and `CLAUDE.md` belong to the project and stay out of the zip.
 
-Talk to the user in the language they are using.
+Talk to the user in the language they are using, and write the project files in that language too (step 5).
 
 ## 1. Destination folder
 
@@ -69,6 +69,20 @@ Three files have placeholders: `README.md`, `AGENTS.md` and `src/.claude-plugin/
 
 Use the file edit tool; if it can't reach the destination, use a script that does literal text replacement. Don't use `sed`: descriptions with `/`, `&` or quotes break `sed`. In `plugin.json`, values must end up as valid JSON strings (quotes and backslashes escaped); if `jq` is available, check with `jq . "<destination>/src/.claude-plugin/plugin.json"`.
 
+## 5. Match the user's language
+
+The project files are for the user, so they must be written in the language the user is using with you in this session. The template ships in English. If the user is writing in another language (Portuguese, Spanish, etc.), translate the prose in these files after filling in the placeholders:
+
+- `README.md`
+- `AGENTS.md`
+- `scripts/pii-patterns.example.txt`: translate it, then copy it over `scripts/pii-patterns.txt` again so both match. Every line in it is a `#` comment, including the examples; translate the illustrative words in the examples too (e.g. `your-username` → `seu-usuario`).
+
+Translate headings, sentences and the comments in the folder trees. Keep unchanged anything that is code or a name the tooling depends on: file and folder names, paths, commands, code blocks, JSON keys and the values the user gave. Keep URLs as they are, including the `/docs/en/` links; don't guess localized doc URLs. If in doubt, leave it as is.
+
+Don't translate `scripts/pack.sh`, `CLAUDE.md` (it only contains `@AGENTS.md`), `.gitignore` or `plugin.json`. The script and config files are code: changing them risks breaking them, and their messages are short.
+
+If the user is writing in English, keep the files as they are.
+
 Then confirm nothing was left behind:
 
 ```bash
@@ -77,11 +91,11 @@ grep -rn "{{" "<destination>" --exclude-dir=.git
 
 The command should return nothing.
 
-## 5. Git
+## 6. Git
 
 If the destination isn't inside a git repository yet (`git -C "<destination>" rev-parse --is-inside-work-tree` fails), run `git init` there. Don't commit: the first commit belongs to the user.
 
-## 6. Validate
+## 7. Validate
 
 If the `claude` command exists, run:
 
@@ -91,7 +105,7 @@ claude plugin validate "<destination>/src"
 
 It should pass. If it reports an error, fix it before handing off; if it reports a warning, show it to the user.
 
-## 7. Hand off
+## 8. Hand off
 
 Show the created tree (`find "<destination>" -not -path '*/.git/*' | sort` or `tree -a -I .git`) and the next steps, briefly:
 
