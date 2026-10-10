@@ -1,6 +1,6 @@
 {
   "name": "eis-plugin-skeleton",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Creates the folder structure of a plugin project for Claude Code and Cowork: src/ as the plugin root, docs/, scripts/pack.sh and versioned builds in dist/.",
   "author": {
     "name": "Diego Eis"
