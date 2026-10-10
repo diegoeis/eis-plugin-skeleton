@@ -1,6 +1,6 @@
 ---
 name: skel-migrate
-description: Migrates an existing Claude Code or Cowork plugin folder to the skel structure (src/ as the plugin root, docs/, scripts/pack.sh, dist/, README.md, AGENTS.md, CLAUDE.md). Reads the folder, proposes a plan with every move and the final tree, waits for approval, then only moves existing files and creates the missing ones; changes to existing files are suggested, never applied. Use whenever the user says "migrate my plugin", "reorganize my plugin folder", "convert this plugin to the skel structure", "move my plugin into src", "organiza a pasta do meu plugin", "migra meu plugin", "reorganiza o plugin que já existe", "coloca meu plugin nessa estrutura", or runs /eis-setup-plugin:skel-migrate, even if they don't say "skel". For new plugins, use skel-init instead.
+description: Migrates an existing Claude Code or Cowork plugin folder to the skel structure (src/ as the plugin root, docs/, scripts/pack.sh, dist/, README.md, AGENTS.md, CLAUDE.md). Reads the folder, proposes a plan with every move and the final tree, waits for approval, then only moves existing files and creates the missing ones; changes to existing files are suggested, never applied. Use whenever the user says "migrate my plugin", "reorganize my plugin folder", "convert this plugin to the skel structure", "move my plugin into src", "organiza a pasta do meu plugin", "migra meu plugin", "reorganiza o plugin que já existe", "coloca meu plugin nessa estrutura", or runs /eis-plugin-skeleton:skel-migrate, even if they don't say "skel". For new plugins, use skel-init instead.
 argument-hint: "[folder-path]"
 ---
 
@@ -152,5 +152,5 @@ Keep it short:
 1. **What was done**: how many items moved, which files were created, and the verification results.
 2. **Suggestions still open**: the list from step 4 that the user needs to apply by hand, most important first (marketplace path, `.gitignore` lines, missing `version`, etc.).
 3. **Other skills in this plugin**, one line each:
-   - `/eis-setup-plugin:skel-init`: creates a new plugin project with this structure from scratch.
-   - `/eis-setup-plugin:skel-build`: bumps the version and runs `scripts/pack.sh` to build `dist/vX.Y.Z/` and the zip.
+   - `/eis-plugin-skeleton:skel-init`: creates a new plugin project with this structure from scratch.
+   - `/eis-plugin-skeleton:skel-build`: bumps the version and runs `scripts/pack.sh` to build `dist/vX.Y.Z/` and the zip.

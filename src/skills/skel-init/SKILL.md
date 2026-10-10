@@ -1,6 +1,6 @@
 ---
 name: skel-init
-description: Creates a new plugin project folder for Claude Code and Cowork from scratch, with src/ (the plugin root), docs/, scripts/pack.sh (packs into dist/vX.Y.Z/ and dist/vX.Y.Z.zip), README.md, AGENTS.md and CLAUDE.md, ready for the user to drop their skills into src/. Use whenever the user says "new plugin project", "start a plugin", "scaffold a plugin", "set up a plugin folder", "plugin setup", "cria um plugin novo", "inicia um projeto de plugin", "setup de plugin", "monta a estrutura de pastas do plugin", or runs /eis-setup-plugin:skel-init, even if they don't mention folder structure. Does not reorganize existing plugins; in that case, say this mode isn't available yet.
+description: Creates a new plugin project folder for Claude Code and Cowork from scratch, with src/ (the plugin root), docs/, scripts/pack.sh (packs into dist/vX.Y.Z/ and dist/vX.Y.Z.zip), README.md, AGENTS.md and CLAUDE.md, ready for the user to drop their skills into src/. Use whenever the user says "new plugin project", "start a plugin", "scaffold a plugin", "set up a plugin folder", "plugin setup", "cria um plugin novo", "inicia um projeto de plugin", "setup de plugin", "monta a estrutura de pastas do plugin", or runs /eis-plugin-skeleton:skel-init, even if they don't mention folder structure. Does not reorganize existing plugins; in that case, say this mode isn't available yet.
 argument-hint: "[folder-path]"
 ---
 
@@ -112,4 +112,4 @@ Show the created tree (`find "<destination>" -not -path '*/.git/*' | sort` or `t
 1. Put skills in `src/skills/<skill-name>/SKILL.md` (and agents, hooks etc. inside `src/`).
 2. Fill `scripts/pii-patterns.txt` with what must not leak into the package (local paths, emails, internal names). This file stays on their machine only, out of git.
 3. Test with `claude --plugin-dir ./src`.
-4. To build a version, run `/eis-setup-plugin:skel-build`: it bumps the version when needed and runs `./scripts/pack.sh`. Output goes to `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. Running `./scripts/pack.sh` directly also works; then bump `version` in `src/.claude-plugin/plugin.json` yourself from the second package on.
+4. To build a version, run `/eis-plugin-skeleton:skel-build`: it bumps the version when needed and runs `./scripts/pack.sh`. Output goes to `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. Running `./scripts/pack.sh` directly also works; then bump `version` in `src/.claude-plugin/plugin.json` yourself from the second package on.

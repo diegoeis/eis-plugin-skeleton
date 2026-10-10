@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Repository of the `eis-setup-plugin` plugin. The plugin's skills are prefixed `skel-` (from skeleton): `skel-init` creates a plugin project from a template, `skel-migrate` moves an existing plugin into that structure, and `skel-build` bumps the version and runs `scripts/pack.sh` in such a project.
+Repository of the `eis-plugin-skeleton` plugin. The plugin's skills are prefixed `skel-` (from skeleton): `skel-init` creates a plugin project from a template, `skel-migrate` moves an existing plugin into that structure, and `skel-build` bumps the version and runs `scripts/pack.sh` in such a project.
 
 This repo follows the same structure the plugin creates.
 

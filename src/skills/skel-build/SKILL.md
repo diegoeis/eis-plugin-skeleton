@@ -1,6 +1,6 @@
 ---
 name: skel-build
-description: Builds a new version of a plugin project created by skel-init. Bumps the plugin version (patch by default, suggests minor or major when the changes call for it, or uses the exact version the user asks for) and runs scripts/pack.sh, which validates the plugin, audits src/ for personal data and writes dist/vX.Y.Z/ and dist/vX.Y.Z.zip. Use whenever the user says "build the plugin", "package the plugin", "make a new version", "bump and build", "generate the zip", "builda o plugin", "empacota o plugin", "gera uma versão nova", "gera o zip", "sobe a versão", or runs /eis-setup-plugin:skel-build, even if they don't mention versions or scripts.
+description: Builds a new version of a plugin project created by skel-init. Bumps the plugin version (patch by default, suggests minor or major when the changes call for it, or uses the exact version the user asks for) and runs scripts/pack.sh, which validates the plugin, audits src/ for personal data and writes dist/vX.Y.Z/ and dist/vX.Y.Z.zip. Use whenever the user says "build the plugin", "package the plugin", "make a new version", "bump and build", "generate the zip", "builda o plugin", "empacota o plugin", "gera uma versão nova", "gera o zip", "sobe a versão", or runs /eis-plugin-skeleton:skel-build, even if they don't mention versions or scripts.
 argument-hint: "[version]"
 ---
 
@@ -14,7 +14,7 @@ Talk to the user in the language they are using.
 
 Use the path the user gave, or the current directory. From there, walk up until you find a folder that has both `scripts/pack.sh` and `src/.claude-plugin/plugin.json`. That folder is the project root.
 
-If no such folder exists, stop. Say the project doesn't follow the skel structure and that `/eis-setup-plugin:skel-init` creates one. Don't try to package anything else, because without that structure there's no way to know what belongs in the package.
+If no such folder exists, stop. Say the project doesn't follow the skel structure and that `/eis-plugin-skeleton:skel-init` creates one. Don't try to package anything else, because without that structure there's no way to know what belongs in the package.
 
 ## 2. Read the versions
 

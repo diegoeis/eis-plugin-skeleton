@@ -1,4 +1,4 @@
-# eis-setup-plugin
+# eis-plugin-skeleton
 
 Plugin for Claude Code and Cowork that creates the folder structure of a plugin project, keeping what belongs to the project apart from what belongs to the plugin.
 
@@ -6,7 +6,7 @@ Plugin for Claude Code and Cowork that creates the folder structure of a plugin 
 
 ```
 /plugin marketplace add diegoeis/eis-plugins
-/plugin install eis-setup-plugin@eis-plugins
+/plugin install eis-plugin-skeleton@eis-plugins
 ```
 
 ## Skills
@@ -20,9 +20,9 @@ Plugin for Claude Code and Cowork that creates the folder structure of a plugin 
 Usage:
 
 ```
-/eis-setup-plugin:skel-init [folder-path]
-/eis-setup-plugin:skel-migrate [folder-path]
-/eis-setup-plugin:skel-build [version]
+/eis-plugin-skeleton:skel-init [folder-path]
+/eis-plugin-skeleton:skel-migrate [folder-path]
+/eis-plugin-skeleton:skel-build [version]
 ```
 
 ## The structure it creates
