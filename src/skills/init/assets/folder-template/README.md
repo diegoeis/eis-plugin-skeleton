@@ -2,48 +2,48 @@
 
 {{PLUGIN_DESCRIPTION}}
 
-## Estrutura
+## Structure
 
 ```
 {{PLUGIN_NAME}}/
-├── src/                    raiz do plugin: só o que vai para o pacote
+├── src/                    plugin root: only what goes into the package
 │   ├── .claude-plugin/plugin.json
 │   └── skills/
-├── docs/                   especificações e documentação do projeto
+├── docs/                   project specs and documentation
 ├── scripts/
-│   ├── pack.sh             gera o pacote em dist/
-│   ├── pii-patterns.example.txt   modelo da lista de padrões
-│   └── pii-patterns.txt    padrões proibidos em src/ (local, fora do git)
-├── dist/                   builds gerados (fora do git)
+│   ├── pack.sh             builds the package into dist/
+│   ├── pii-patterns.example.txt   template for the pattern list
+│   └── pii-patterns.txt    patterns forbidden in src/ (local, out of git)
+├── dist/                   generated builds (out of git)
 ├── AGENTS.md
 ├── CLAUDE.md
 └── README.md
 ```
 
-## Desenvolver
+## Develop
 
-Coloque skills, agents, hooks e demais arquivos do plugin dentro de `src/`, seguindo o [layout padrão de plugins](https://code.claude.com/docs/en/plugins-reference#standard-layout).
+Put skills, agents, hooks and other plugin files inside `src/`, following the [standard plugin layout](https://code.claude.com/docs/en/plugins-reference#standard-layout).
 
-Para testar sem empacotar:
+To test without packaging:
 
 ```
 claude --plugin-dir ./src
 ```
 
-## Empacotar
+## Package
 
-1. A partir do segundo pacote, suba `version` em `src/.claude-plugin/plugin.json` (o primeiro sai como `0.1.0`).
-2. Rode:
+1. From the second package on, bump `version` in `src/.claude-plugin/plugin.json` (the first one is `0.1.0`).
+2. Run:
 
 ```
 ./scripts/pack.sh
 ```
 
-O script valida o plugin com `claude plugin validate`, procura em `src/` os padrões listados em `scripts/pii-patterns.txt` e gera:
+The script validates the plugin with `claude plugin validate`, searches `src/` for the patterns listed in `scripts/pii-patterns.txt` and builds:
 
-- `dist/vX.Y.Z/` — cópia limpa de `src/`
-- `dist/vX.Y.Z.zip` — o zip dessa pasta, pronto para importar
+- `dist/vX.Y.Z/` — a clean copy of `src/`
+- `dist/vX.Y.Z.zip` — the zip of that folder, ready to import
 
-Ele para se a versão já existir em `dist/`.
+It stops if the version already exists in `dist/`.
 
-`scripts/pii-patterns.txt` fica fora do git, para a sua lista de termos sensíveis não ir para o repositório. Quem clonar o projeto cria o seu a partir de `scripts/pii-patterns.example.txt`.
+`scripts/pii-patterns.txt` stays out of git, so your list of sensitive terms never reaches the repository. Anyone who clones the project creates their own from `scripts/pii-patterns.example.txt`.

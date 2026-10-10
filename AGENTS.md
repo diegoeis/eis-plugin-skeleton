@@ -1,23 +1,25 @@
 # AGENTS.md
 
-Repositório do plugin `eis-setup-plugin`. O plugin tem uma skill, `init`, que cria a estrutura de um projeto de plugin copiando um template.
+Repository of the `eis-setup-plugin` plugin. The plugin has one skill, `init`, which creates the structure of a plugin project by copying a template.
 
-Este repo segue a própria estrutura que o plugin cria.
+This repo follows the same structure the plugin creates.
 
-## Onde fica cada coisa
+## Where things live
 
-- `src/` é a raiz do plugin. Só o que está aqui vai para o pacote e para o marketplace (`eis-plugins` aponta para `path: src`).
-- `src/.claude-plugin/plugin.json` é o manifest e a única fonte da versão.
-- `src/skills/init/SKILL.md` é a skill.
-- `src/skills/init/assets/folder-template/` é o template copiado para o projeto do usuário. Mudou a estrutura padrão? Mude aqui.
-- `scripts/pack.sh` empacota este plugin em `dist/`. É uma cópia de `src/skills/init/assets/folder-template/scripts/pack.sh`: ao alterar um, altere o outro igual.
-- `docs/` guarda especificações e decisões. Não vai para o pacote.
-- `dist/` é gerado e fica fora do git.
+- `src/` is the plugin root. Only what is here goes into the package and the marketplace (`eis-plugins` points to `path: src`).
+- `src/.claude-plugin/plugin.json` is the manifest and the single source of the version.
+- `src/skills/init/SKILL.md` is the skill.
+- `src/skills/init/assets/folder-template/` is the template copied into the user's project. Changing the default structure? Change it here.
+- `scripts/pack.sh` packages this plugin into `dist/`. It is a copy of `src/skills/init/assets/folder-template/scripts/pack.sh`: when you change one, change the other the same way.
+- `scripts/pii-patterns.txt` is local and out of git. The versioned template is `scripts/pii-patterns.example.txt`. Never copy its contents into versioned files.
+- `docs/` holds specs and decisions. It doesn't go into the package.
+- `dist/` is generated and stays out of git.
 
-## Regras
+## Rules
 
-- O template tem placeholders `{{PLUGIN_NAME}}`, `{{PLUGIN_DESCRIPTION}}` e `{{AUTHOR_NAME}}`. Se criar um novo, documente-o na tabela do passo 4 do `SKILL.md`.
-- Mantenha o `.gitkeep` das pastas vazias do template (`docs/`, `src/skills/`): sem ele, o git não versiona a pasta e ela some na instalação.
-- Antes de publicar, suba `version` em `src/.claude-plugin/plugin.json`. O marketplace não fixa versão; com `version` no manifest, quem instalou só recebe atualização quando esse número muda.
-- Rode `claude plugin validate ./src` antes do push.
-- Siga a documentação oficial: https://code.claude.com/docs/en/plugins-reference
+- Write everything in English: docs, template files, skill instructions and script messages.
+- The template has the placeholders `{{PLUGIN_NAME}}`, `{{PLUGIN_DESCRIPTION}}` and `{{AUTHOR_NAME}}`. If you add a new one, document it in the table in step 4 of `SKILL.md`.
+- Keep the `.gitkeep` files in the template's empty folders (`docs/`, `src/skills/`): without them git doesn't track the folder and it disappears on install.
+- Before publishing, bump `version` in `src/.claude-plugin/plugin.json`. The marketplace doesn't pin a version; with `version` in the manifest, users only get an update when that number changes.
+- Run `claude plugin validate ./src` before pushing.
+- Follow the official documentation: https://code.claude.com/docs/en/plugins-reference

@@ -1,99 +1,101 @@
 ---
 name: init
-description: Cria do zero a pasta de um novo projeto de plugin para Claude Code e Cowork, com a estrutura src/ (raiz do plugin), docs/, scripts/pack.sh (empacota em dist/vX.Y.Z/ e dist/vX.Y.Z.zip), README.md, AGENTS.md e CLAUDE.md, pronta para o usuário colocar as skills dentro de src/. Use sempre que o usuário disser "cria um plugin novo", "inicia um projeto de plugin", "setup de plugin", "scaffold de plugin", "monta a estrutura de pastas do plugin", "quero começar um plugin", "new plugin project", ou rodar /eis-setup-plugin:init, mesmo que não fale em estrutura de pastas. Não reorganiza plugins que já existem; nesse caso avise que esse modo ainda não existe.
-argument-hint: "[caminho-da-pasta]"
+description: Creates a new plugin project folder for Claude Code and Cowork from scratch, with src/ (the plugin root), docs/, scripts/pack.sh (packs into dist/vX.Y.Z/ and dist/vX.Y.Z.zip), README.md, AGENTS.md and CLAUDE.md, ready for the user to drop their skills into src/. Use whenever the user says "new plugin project", "start a plugin", "scaffold a plugin", "set up a plugin folder", "plugin setup", "cria um plugin novo", "inicia um projeto de plugin", "setup de plugin", "monta a estrutura de pastas do plugin", or runs /eis-setup-plugin:init, even if they don't mention folder structure. Does not reorganize existing plugins; in that case, say this mode isn't available yet.
+argument-hint: "[folder-path]"
 ---
 
 # init
 
-Cria a estrutura inicial de um projeto de plugin copiando o template em `${CLAUDE_SKILL_DIR}/assets/folder-template/`. O template é a fonte da verdade: copie os arquivos dele, não os reescreva de memória. É isso que garante que todo projeto saia igual.
+Creates the initial structure of a plugin project by copying the template at `${CLAUDE_SKILL_DIR}/assets/folder-template/`. The template is the source of truth: copy its files, don't rewrite them from memory. That is what guarantees every project comes out the same.
 
-A ideia da estrutura é separar o que é projeto do que é plugin. `src/` é a raiz do plugin e a única coisa que vai para o pacote. `docs/`, `scripts/`, `README.md`, `AGENTS.md` e `CLAUDE.md` são do projeto e ficam fora do zip.
+The point of the structure is to separate what belongs to the project from what belongs to the plugin. `src/` is the plugin root and the only thing that goes into the package. `docs/`, `scripts/`, `README.md`, `AGENTS.md` and `CLAUDE.md` belong to the project and stay out of the zip.
 
-## 1. Pasta de destino
+Talk to the user in the language they are using.
 
-Se o usuário passou um caminho como argumento, use-o. Se não, pergunte onde o projeto vai ficar. Peça um caminho absoluto; se vier relativo, resolva a partir do diretório atual e confirme o caminho completo com ele.
+## 1. Destination folder
 
-Se você não tiver acesso a essa pasta na sessão (Cowork, por exemplo), peça acesso antes de continuar.
+If the user passed a path as an argument, use it. Otherwise, ask where the project should live. Ask for an absolute path; if you get a relative one, resolve it from the current directory and confirm the full path with the user.
 
-Depois verifique o estado da pasta, sem criar nada ainda:
+If you don't have access to that folder in this session (in Cowork, for example), request access before going on.
 
-- Não existe, ou existe vazia, ou só tem `.git/` e `.DS_Store`: siga.
-- Existe com outros arquivos: pare. Diga quais arquivos encontrou e que organizar um plugin existente ainda não é suportado por esta skill. Não copie nada por cima, porque o template sobrescreveria arquivos do usuário.
+Then check the folder's state, without creating anything yet:
 
-## 2. Dados do plugin
+- Doesn't exist, exists and is empty, or only contains `.git/` and `.DS_Store`: go on.
+- Exists with other files: stop. Tell the user which files you found and that organizing an existing plugin isn't supported by this skill yet. Don't copy anything over it, because the template would overwrite the user's files.
 
-Pergunte numa única mensagem, sugerindo valores padrão:
+## 2. Plugin details
 
-- **Nome do plugin**: sugira o nome da pasta de destino, se ele for um nome válido (regras abaixo); se não for, não sugira nada.
-- **Descrição**: uma frase, numa linha só, sobre o que o plugin faz.
-- **Autor**: nome do autor. Se `git config user.name` retornar algo, sugira; se vier vazio, só pergunte.
+Ask in a single message, suggesting defaults:
 
-A versão inicial é sempre `0.1.0`; não pergunte.
+- **Plugin name**: suggest the destination folder's name if it's a valid name (rules below); if it isn't, don't suggest anything.
+- **Description**: one sentence, on a single line, about what the plugin does.
+- **Author**: the author's name. If `git config user.name` returns something, suggest it; if it's empty, just ask.
 
-Valide o nome antes de criar qualquer arquivo. Exija kebab-case (só minúsculas, números e hífens): o Claude Code aceita outros formatos só com aviso, mas a sincronização com o marketplace do Claude.ai e o Cowork exigem kebab-case. Além disso, o `claude plugin validate` rejeita com erro nomes que:
+The initial version is always `0.1.0`; don't ask.
 
-- começam com `claude-`, `anthropic-`, `anthropics-` ou `cc-plugin-`;
-- são exatamente `claude`, `anthropic`, `anthropics`, `claude-code` ou `claude-mods`;
-- põem `official` junto de `claude` ou `anthropic` (ex.: `official-claude-tools`).
+Validate the name before creating any file. Require kebab-case (lowercase letters, digits and hyphens only): Claude Code accepts other formats with just a warning, but Claude.ai marketplace sync and Cowork require kebab-case. On top of that, `claude plugin validate` fails with an error on names that:
 
-Se o nome cair numa dessas regras, explique o motivo e peça outro. Se o usuário insistir, não crie o projeto: o plugin não passaria na validação. O nome não precisa ser igual ao da pasta.
+- start with `claude-`, `anthropic-`, `anthropics-` or `cc-plugin-`;
+- are exactly `claude`, `anthropic`, `anthropics`, `claude-code` or `claude-mods`;
+- put `official` next to `claude` or `anthropic` (e.g. `official-claude-tools`).
 
-## 3. Copiar o template
+If the name breaks one of these rules, explain why and ask for another. If the user insists, don't create the project: the plugin wouldn't pass validation. The name doesn't have to match the folder name.
 
-Só agora crie a pasta (se não existir) e copie:
+## 3. Copy the template
+
+Only now create the folder (if it doesn't exist) and copy:
 
 ```bash
-mkdir -p "<destino>"
-cp -R "${CLAUDE_SKILL_DIR}/assets/folder-template/." "<destino>/"
-mkdir -p "<destino>/docs" "<destino>/src/skills"
-cp "<destino>/scripts/pii-patterns.example.txt" "<destino>/scripts/pii-patterns.txt"
-chmod +x "<destino>/scripts/pack.sh"
+mkdir -p "<destination>"
+cp -R "${CLAUDE_SKILL_DIR}/assets/folder-template/." "<destination>/"
+mkdir -p "<destination>/docs" "<destination>/src/skills"
+cp "<destination>/scripts/pii-patterns.example.txt" "<destination>/scripts/pii-patterns.txt"
+chmod +x "<destination>/scripts/pack.sh"
 ```
 
-O `pii-patterns.txt` é a cópia local da lista de termos proibidos no pacote. Ele está no `.gitignore` do template, para a lista do usuário nunca ir para o repositório.
+`pii-patterns.txt` is the local copy of the list of terms forbidden in the package. It's in the template's `.gitignore`, so the user's list never reaches the repository.
 
-O `/.` no fim da origem é o que copia também os arquivos ocultos (`.gitignore`, `.claude-plugin/`, `.gitkeep`). O `mkdir -p` garante as pastas vazias caso a instalação do plugin tenha descartado os `.gitkeep`, e o `chmod` garante o script executável caso a instalação tenha perdido a permissão.
+The `/.` at the end of the source is what also copies hidden files (`.gitignore`, `.claude-plugin/`, `.gitkeep`). The `mkdir -p` guarantees the empty folders in case the plugin install dropped the `.gitkeep` files, and the `chmod` keeps the script executable in case the install lost the permission.
 
-## 4. Preencher os placeholders
+## 4. Fill in the placeholders
 
-Três arquivos têm placeholders: `README.md`, `AGENTS.md` e `src/.claude-plugin/plugin.json`. Substitua:
+Three files have placeholders: `README.md`, `AGENTS.md` and `src/.claude-plugin/plugin.json`. Replace:
 
-| Placeholder | Valor |
+| Placeholder | Value |
 | --- | --- |
-| `{{PLUGIN_NAME}}` | nome do plugin |
-| `{{PLUGIN_DESCRIPTION}}` | descrição |
-| `{{AUTHOR_NAME}}` | autor |
+| `{{PLUGIN_NAME}}` | plugin name |
+| `{{PLUGIN_DESCRIPTION}}` | description |
+| `{{AUTHOR_NAME}}` | author |
 
-Use a ferramenta de edição de arquivos; se ela não alcançar o destino, use um script que faça substituição literal de texto. Não use `sed`: descrições com `/`, `&` ou aspas quebram `sed`. No `plugin.json`, os valores precisam sair como strings JSON válidas (aspas e barras invertidas escapadas); se tiver `jq`, confira com `jq . "<destino>/src/.claude-plugin/plugin.json"`.
+Use the file edit tool; if it can't reach the destination, use a script that does literal text replacement. Don't use `sed`: descriptions with `/`, `&` or quotes break `sed`. In `plugin.json`, values must end up as valid JSON strings (quotes and backslashes escaped); if `jq` is available, check with `jq . "<destination>/src/.claude-plugin/plugin.json"`.
 
-Depois confirme que nada ficou para trás:
+Then confirm nothing was left behind:
 
 ```bash
-grep -rn "{{" "<destino>" --exclude-dir=.git
+grep -rn "{{" "<destination>" --exclude-dir=.git
 ```
 
-O comando não deve retornar nada.
+The command should return nothing.
 
 ## 5. Git
 
-Se o destino ainda não estiver dentro de um repositório git (`git -C "<destino>" rev-parse --is-inside-work-tree` falha), rode `git init` nele. Não faça commit: o primeiro commit é do usuário.
+If the destination isn't inside a git repository yet (`git -C "<destination>" rev-parse --is-inside-work-tree` fails), run `git init` there. Don't commit: the first commit belongs to the user.
 
-## 6. Validar
+## 6. Validate
 
-Se o comando `claude` existir, rode:
+If the `claude` command exists, run:
 
 ```bash
-claude plugin validate "<destino>/src"
+claude plugin validate "<destination>/src"
 ```
 
-Deve passar. Se der erro, corrija antes de entregar; se der aviso, mostre ao usuário.
+It should pass. If it reports an error, fix it before handing off; if it reports a warning, show it to the user.
 
-## 7. Entregar
+## 7. Hand off
 
-Mostre a árvore criada (`find "<destino>" -not -path '*/.git/*' | sort` ou `tree -a -I .git`) e os próximos passos, curtos:
+Show the created tree (`find "<destination>" -not -path '*/.git/*' | sort` or `tree -a -I .git`) and the next steps, briefly:
 
-1. Coloque as skills em `src/skills/<nome-da-skill>/SKILL.md` (e agents, hooks etc. dentro de `src/`).
-2. Preencha `scripts/pii-patterns.txt` com o que não pode vazar no pacote (caminhos locais, e-mails, nomes internos). Esse arquivo fica só na máquina dele, fora do git.
-3. Teste com `claude --plugin-dir ./src`.
-4. Para gerar uma versão, rode `./scripts/pack.sh`. Sai em `dist/vX.Y.Z/` e `dist/vX.Y.Z.zip`. O primeiro pacote sai como `0.1.0`; a partir do segundo, suba `version` em `src/.claude-plugin/plugin.json` antes.
+1. Put skills in `src/skills/<skill-name>/SKILL.md` (and agents, hooks etc. inside `src/`).
+2. Fill `scripts/pii-patterns.txt` with what must not leak into the package (local paths, emails, internal names). This file stays on their machine only, out of git.
+3. Test with `claude --plugin-dir ./src`.
+4. To build a version, run `./scripts/pack.sh`. Output goes to `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. The first package is `0.1.0`; from the second one on, bump `version` in `src/.claude-plugin/plugin.json` first.

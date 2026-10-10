@@ -1,8 +1,8 @@
 # eis-setup-plugin
 
-Plugin para Claude Code e Cowork que cria a estrutura de pastas de um projeto de plugin, separando o que é projeto do que é plugin.
+Plugin for Claude Code and Cowork that creates the folder structure of a plugin project, keeping what belongs to the project apart from what belongs to the plugin.
 
-## Instalar
+## Install
 
 ```
 /plugin marketplace add diegoeis/eis-plugins
@@ -11,39 +11,39 @@ Plugin para Claude Code e Cowork que cria a estrutura de pastas de um projeto de
 
 ## Skills
 
-| Skill | O que faz |
+| Skill | What it does |
 | --- | --- |
-| [`init`](src/skills/init) | Cria um projeto de plugin novo a partir do template: `src/`, `docs/`, `scripts/pack.sh`, README, AGENTS.md e CLAUDE.md. |
+| [`init`](src/skills/init) | Creates a new plugin project from the template: `src/`, `docs/`, `scripts/pack.sh`, README, AGENTS.md and CLAUDE.md. |
 
-Uso: `/eis-setup-plugin:init [caminho-da-pasta]`
+Usage: `/eis-setup-plugin:init [folder-path]`
 
-## A estrutura criada
+## The structure it creates
 
 ```
-meu-plugin/
-├── src/                    raiz do plugin: só o que vai para o pacote
+my-plugin/
+├── src/                    plugin root: only what goes into the package
 │   ├── .claude-plugin/plugin.json
 │   └── skills/
-├── docs/                   especificações e documentação do projeto
+├── docs/                   project specs and documentation
 ├── scripts/
-│   ├── pack.sh             gera o pacote em dist/
-│   ├── pii-patterns.example.txt   modelo da lista de padrões
-│   └── pii-patterns.txt    padrões proibidos em src/ (local, fora do git)
-├── dist/                   builds (fora do git)
+│   ├── pack.sh             builds the package into dist/
+│   ├── pii-patterns.example.txt   template for the pattern list
+│   └── pii-patterns.txt    patterns forbidden in src/ (local, out of git)
+├── dist/                   builds (out of git)
 │   ├── vX.Y.Z/
 │   └── vX.Y.Z.zip
 ├── AGENTS.md
-├── CLAUDE.md               importa o AGENTS.md
+├── CLAUDE.md               imports AGENTS.md
 └── README.md
 ```
 
-`pack.sh` lê `name` e `version` de `src/.claude-plugin/plugin.json`, roda `claude plugin validate`, procura em `src/` os padrões de `scripts/pii-patterns.txt` (arquivo local, fora do git; o modelo é `pii-patterns.example.txt`) e gera `dist/vX.Y.Z/` e `dist/vX.Y.Z.zip`. Ele para se a versão já existir.
+`pack.sh` reads `name` and `version` from `src/.claude-plugin/plugin.json`, runs `claude plugin validate`, searches `src/` for the patterns in `scripts/pii-patterns.txt` (a local file, out of git; the template is `pii-patterns.example.txt`) and builds `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. It stops if the version already exists.
 
-Este repositório usa a mesma estrutura: o plugin está em `src/`.
+This repository uses the same structure: the plugin lives in `src/`.
 
-## Desenvolver este plugin
+## Developing this plugin
 
 ```
-claude --plugin-dir ./src     # testar
-./scripts/pack.sh             # empacotar
+claude --plugin-dir ./src     # test
+./scripts/pack.sh             # package
 ```
