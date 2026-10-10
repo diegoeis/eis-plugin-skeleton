@@ -48,8 +48,7 @@ Only now create the folder (if it doesn't exist) and copy:
 ```bash
 mkdir -p "<destination>"
 cp -R "${CLAUDE_PLUGIN_ROOT}/templates/project/." "<destination>/"
-mkdir -p "<destination>/src/.claude-plugin"
-cp "${CLAUDE_PLUGIN_ROOT}/templates/plugin.json.template" "<destination>/src/.claude-plugin/plugin.json"
+mv "<destination>/src/.claude-plugin/plugin.json.template" "<destination>/src/.claude-plugin/plugin.json"
 mkdir -p "<destination>/docs" "<destination>/src/skills"
 cp "<destination>/scripts/pii-patterns.example.txt" "<destination>/scripts/pii-patterns.txt"
 chmod +x "<destination>/scripts/pack.sh"
@@ -57,7 +56,7 @@ chmod +x "<destination>/scripts/pack.sh"
 
 `pii-patterns.txt` is the local copy of the list of terms forbidden in the package. It's in the template's `.gitignore`, so the user's list never reaches the repository.
 
-The manifest template lives outside `templates/project/`, as `templates/plugin.json.template`, on purpose: a `.claude-plugin/plugin.json` nested inside this plugin makes Claude.ai's marketplace sync reject the whole plugin. It only becomes `src/.claude-plugin/plugin.json` in the user's project.
+The manifest template is named `plugin.json.template` on purpose: a `.claude-plugin/plugin.json` nested inside this plugin makes Claude.ai's marketplace sync reject the whole plugin. The `mv` gives it its real name in the user's project.
 
 The `/.` at the end of the source is what also copies hidden files (`.gitignore`, `.claude-plugin/`, `.gitkeep`). The `mkdir -p` guarantees the empty folders in case the plugin install dropped the `.gitkeep` files, and the `chmod` keeps the script executable in case the install lost the permission.
 

@@ -122,7 +122,7 @@ Keep the printed path; you need it in step 7.
 
 **Remove the source folders that the moves left empty** (`rmdir`, which only removes empty folders). They held nothing but the files you moved, so this isn't deleting user content. Never remove a folder that still has anything in it.
 
-**Create what's missing** by copying from `${CLAUDE_PLUGIN_ROOT}/templates/project/`, only for paths that don't exist yet. Never copy over an existing file. Then:
+**Create what's missing** by copying from `${CLAUDE_PLUGIN_ROOT}/templates/project/`, only for paths that don't exist yet. Never copy over an existing file. Skip `src/.claude-plugin/plugin.json.template`: the plugin being migrated already has its own `plugin.json`. Then:
 
 - Fill the placeholders `{{PLUGIN_NAME}}`, `{{PLUGIN_DESCRIPTION}}` and `{{AUTHOR_NAME}}` in the files you created, with values from the existing `plugin.json` (`name`, `description`, `author.name`). If a value is missing, or is clearly not a real description (a single letter, "TODO"), ask. Use the file edit tool or a literal text replacement, not `sed`.
 - **`scripts/pii-patterns.txt` only when git will ignore it.** If you created `.gitignore` from the template, it already does. If the project had its own `.gitignore`, check with `git -C "<folder>" check-ignore -q scripts/pii-patterns.txt`; if it isn't ignored, don't create `pii-patterns.txt`. Create only the example and tell the user to add `scripts/pii-patterns.txt` to `.gitignore` before copying the example over. Otherwise the user's list of sensitive terms could be committed by the next `git add -A`.
