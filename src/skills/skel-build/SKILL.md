@@ -1,12 +1,12 @@
 ---
 name: skel-build
-description: Builds a new version of a plugin project created by skel-init. Bumps the plugin version (patch by default, suggests minor or major when the changes call for it, or uses the exact version the user asks for) and runs scripts/pack.sh, which validates the plugin, audits src/ for personal data and writes dist/vX.Y.Z/ and dist/vX.Y.Z.zip. Use whenever the user says "build the plugin", "package the plugin", "make a new version", "bump and build", "generate the zip", "builda o plugin", "empacota o plugin", "gera uma versão nova", "gera o zip", "sobe a versão", or runs /eis-plugin-skeleton:skel-build, even if they don't mention versions or scripts.
+description: Builds a new version of a plugin project created by skel-init. Bumps the plugin version, kept in plugin.json as "version" or "metadata.release" (patch by default, suggests minor or major when the changes call for it, or uses the exact version the user asks for) and runs scripts/pack.sh, which validates the plugin, audits src/ for personal data and writes dist/vX.Y.Z/ and dist/vX.Y.Z.zip (or dist/<name>/ and dist/<name>.zip when the plugin has no version). Use whenever the user says "build the plugin", "package the plugin", "make a new version", "bump and build", "generate the zip", "builda o plugin", "empacota o plugin", "gera uma versão nova", "gera o zip", "sobe a versão", or runs /eis-plugin-skeleton:skel-build, even if they don't mention versions or scripts.
 argument-hint: "[version]"
 ---
 
 # skel-build
 
-Builds a new version of a plugin project that follows the skel structure: `src/` is the plugin root, `src/.claude-plugin/plugin.json` holds the version, and `scripts/pack.sh` does the packaging. This skill decides the version, writes it to `plugin.json` and runs the script. The script does the rest (validation, personal-data audit, `dist/` output); don't reimplement any of it.
+Builds a new version of a plugin project that follows the skel structure: `src/` is the plugin root, `src/.claude-plugin/plugin.json` holds the version (in `version` or `metadata.release`), and `scripts/pack.sh` does the packaging. This skill decides the version, writes it to `plugin.json` and runs the script. The script does the rest (validation, personal-data audit, `dist/` output); don't reimplement any of it.
 
 Talk to the user in the language they are using.
 
@@ -18,10 +18,13 @@ If no such folder exists, stop. Say the project doesn't follow the skel structur
 
 ## 2. Read the versions
 
-- **Manifest version**: the `version` key in `src/.claude-plugin/plugin.json`.
-- **Latest build**: the highest `vX.Y.Z` folder in `dist/`, compared as versions, not as text. This prints it without the `v` and the trailing slash: `ls -d dist/v*/ 2>/dev/null | sed 's#dist/v##; s#/##' | sort -V | tail -1`. None if it prints nothing.
+- **Version field**: the field that holds the version in `src/.claude-plugin/plugin.json`. It's `version` when that key exists; otherwise `metadata.release` when that one exists; otherwise there's none. Always read from and write to this same field: never add `version` to a plugin that uses `metadata.release`, or the other way around. Some projects leave `version` out on purpose, because a `version` in the manifest holds back updates in Claude Code until it changes.
+- **Manifest version**: the value of that field.
+- **Latest build**: the highest `vX.Y.Z` folder in `dist/`, compared as versions, not as text. This prints it without the `v` and the trailing slash: `ls -d dist/v[0-9]*/ 2>/dev/null | sed 's#dist/v##; s#/##' | sort -V | tail -1` (the `[0-9]` keeps unversioned builds such as `dist/vault-plugin/` out). None if it prints nothing.
 
 Versions are `MAJOR.MINOR.PATCH`. If the manifest version isn't in that format, show it to the user and ask which version to build.
+
+**No version field at all**: don't bump and don't block. Skip to step 5: `pack.sh` builds `dist/<name>/` and `dist/<name>.zip`, replacing the previous unversioned build. The exception is when the user asks for a specific version: then write it to `metadata.release`, adding a `"metadata": {"release": "X.Y.Z"}` object to `plugin.json` if it doesn't exist, and go on as a versioned build. Tell the user that from now on the plugin builds as `dist/vX.Y.Z/`; the old `dist/<name>/` build stays where it is.
 
 ## 3. Decide the version to build
 
@@ -41,7 +44,7 @@ Go through these cases in order and use the first that applies:
 
 ## 4. Write the new version
 
-Change only the `version` value in `src/.claude-plugin/plugin.json`, using the file edit tool, and keep the rest of the file as it is. In case 2 it's already right; leave it.
+Change only the value of the version field (`version` or `metadata.release`, as found in step 2) in `src/.claude-plugin/plugin.json`, using the file edit tool, and keep the rest of the file as it is. In case 2 it's already right; leave it.
 
 If the project root has a `CHANGELOG.md`, add an entry for the new version at the top, following the format the file already uses, summarizing what changed. Base the summary on the diff against the latest build (run the same `diff` as in step 3 if you haven't); if there's no previous build, write that it's the first release. Skip this if the file doesn't exist (don't create it), or if it already has an entry for this version, which happens when a build failed and is being run again.
 
@@ -54,6 +57,8 @@ From the project root:
 ```bash
 ./scripts/pack.sh
 ```
+
+`claude plugin validate` warns "No version specified" when the plugin has no `version` key. That's expected for projects that use `metadata.release` or no version: pass it on, but never add `version` to silence it.
 
 If it fails, show the user the script's error and what it means:
 
@@ -70,7 +75,7 @@ If the script prints a warning that `scripts/pii-patterns.txt` doesn't exist, pa
 Tell the user, briefly:
 
 - the version built, and the previous one;
-- the outputs: `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip` (with the size the script prints);
-- how to install it: `claude --plugin-dir dist/vX.Y.Z` in Claude Code, or upload `dist/vX.Y.Z.zip` in Cowork.
+- the outputs the script printed: `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`, or `dist/<name>/` and `dist/<name>.zip` for an unversioned build (with the size);
+- how to install it: `claude --plugin-dir <output folder>` in Claude Code, or upload the zip in Cowork.
 
-If the project is a git repository, remind the user that the version bump in `plugin.json` still needs to be committed. Don't commit for them.
+If the project is a git repository and you changed the version, remind the user that the change in `plugin.json` still needs to be committed. Don't commit for them.

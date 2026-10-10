@@ -7,7 +7,7 @@ This repo follows the same structure the plugin creates.
 ## Where things live
 
 - `src/` is the plugin root. Only what is here goes into the package and the marketplace (`eis-plugins` points to `path: src`).
-- `src/.claude-plugin/plugin.json` is the manifest and the single source of the version.
+- `src/.claude-plugin/plugin.json` is the manifest. This plugin keeps its version in `metadata.release`, not `version`.
 - `src/skills/skel-*/SKILL.md` are the skills. New skills keep the `skel-` prefix.
 - `src/templates/project/src/.claude-plugin/plugin.json.template` is the manifest template. `skel-init` renames it to `plugin.json` in the user's project. Never put a file named `plugin.json` inside any `.claude-plugin/` folder below `src/` other than `src/.claude-plugin/`: Claude.ai's marketplace sync rejects a plugin with a nested `.claude-plugin/plugin.json`, and `claude plugin validate` doesn't catch it. `scripts/pack.sh` checks for it.
 - `src/templates/project/` is the project template, shared by `skel-init` and `skel-migrate` through `${CLAUDE_PLUGIN_ROOT}/templates/project/`. Changing the default structure? Change it here, and check that both skills still describe it correctly.
@@ -22,6 +22,7 @@ This repo follows the same structure the plugin creates.
 - The template (`templates/project/`) has the placeholders `{{PLUGIN_NAME}}`, `{{PLUGIN_DESCRIPTION}}` and `{{AUTHOR_NAME}}`. If you add a new one, document it in the table in step 4 of `SKILL.md`.
 - When you add, remove or rename a skill, update the README table and the "Other skills" list at the end of `skel-migrate`'s `SKILL.md`.
 - Keep the `.gitkeep` files in the template's empty folders (`docs/`, `src/skills/`): without them git doesn't track the folder and it disappears on install.
-- Before publishing, bump `version` in `src/.claude-plugin/plugin.json`. The marketplace doesn't pin a version; with `version` in the manifest, users only get an update when that number changes.
+- Before publishing, bump `metadata.release` in `src/.claude-plugin/plugin.json`. Don't add `version` back: it's left out so updates aren't held back by it. Claude.ai picks up plugin changes when the `eis-plugins` marketplace syncs.
+- `pack.sh` and `skel-build` read `version`, then `metadata.release`; without either, `pack.sh` still builds, as `dist/<name>/`. Keep that fallback: never make a missing version block a build.
 - Run `claude plugin validate ./src` before pushing.
 - Follow the official documentation: https://code.claude.com/docs/en/plugins-reference

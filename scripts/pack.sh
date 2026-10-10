@@ -9,8 +9,12 @@
 #   dist/vX.Y.Z/       clean copy of src/
 #   dist/vX.Y.Z.zip    zip of that folder, ready to import
 #
-# The version comes from the "version" key in src/.claude-plugin/plugin.json.
-# If dist/vX.Y.Z already exists, the script stops: bump the version before packaging.
+# The version comes from src/.claude-plugin/plugin.json: the "version" key, or
+# "metadata.release" when there's no "version". If dist/vX.Y.Z already exists,
+# the script stops: bump the version before packaging.
+#
+# Without either field, the build still runs, named after the plugin:
+#   dist/<name>/ and dist/<name>.zip, replaced on every build.
 #
 # Usage:
 #   ./scripts/pack.sh
@@ -29,27 +33,42 @@ die() { echo "Error: $*" >&2; exit 1; }
 [[ -d "$SRC" ]] || die "src/ folder not found in $ROOT"
 [[ -f "$MANIFEST" ]] || die "manifest not found at src/.claude-plugin/plugin.json"
 
-# Reads a top-level string key from plugin.json.
-# Uses jq when available; without jq, falls back to a grep that takes the first match.
+# Reads a string from plugin.json by jq path (".name", ".metadata.release").
+# Uses jq when available; without jq, falls back to a grep on the last key of the
+# path, taking its first match.
 read_key() {
-  local key="$1"
+  local path="$1" key="${1##*.}"
   if command -v jq >/dev/null 2>&1; then
-    jq -r --arg k "$key" '.[$k] // empty' "$MANIFEST"
+    jq -r "$path // empty" "$MANIFEST"
   else
-    grep -o "\"$key\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" "$MANIFEST" | head -1 | sed 's/.*:[[:space:]]*"\(.*\)"/\1/'
+    grep -o "\"$key\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" "$MANIFEST" | head -1 | sed 's/.*:[[:space:]]*"\(.*\)"/\1/' || true
   fi
 }
 
-NAME="$(read_key name)"
-VERSION="$(read_key version)"
+NAME="$(read_key .name)"
 [[ -n "$NAME" ]] || die "\"name\" is empty or missing in plugin.json"
-[[ -n "$VERSION" ]] || die "\"version\" is empty or missing in plugin.json"
 
-OUT_DIR="$DIST/v$VERSION"
-OUT_ZIP="$DIST/v$VERSION.zip"
+VERSION="$(read_key .version)"
+VERSION_FIELD="version"
+if [[ -z "$VERSION" ]]; then
+  VERSION="$(read_key .metadata.release)"
+  VERSION_FIELD="metadata.release"
+fi
 
-if [[ -e "$OUT_DIR" || -e "$OUT_ZIP" ]]; then
-  die "dist/v$VERSION already exists. Bump \"version\" in src/.claude-plugin/plugin.json before packaging."
+if [[ -n "$VERSION" ]]; then
+  LABEL="v$VERSION"
+  OUT_DIR="$DIST/$LABEL"
+  OUT_ZIP="$DIST/$LABEL.zip"
+  if [[ -e "$OUT_DIR" || -e "$OUT_ZIP" ]]; then
+    die "dist/$LABEL already exists. Bump \"$VERSION_FIELD\" in src/.claude-plugin/plugin.json before packaging."
+  fi
+else
+  # No version anywhere: build anyway, named after the plugin, replacing the previous one.
+  LABEL="$NAME"
+  OUT_DIR="$DIST/$LABEL"
+  OUT_ZIP="$DIST/$LABEL.zip"
+  echo "Warning: no \"version\" or \"metadata.release\" in plugin.json; building dist/$LABEL/ (replaces the previous one)." >&2
+  rm -rf "$OUT_DIR" "$OUT_ZIP"
 fi
 
 # Claude.ai's marketplace sync rejects a plugin that has another .claude-plugin/plugin.json
@@ -87,7 +106,7 @@ else
   fi
 fi
 
-echo "Packaging $NAME v$VERSION..."
+echo "Packaging $NAME${VERSION:+ v$VERSION}..."
 
 mkdir -p "$DIST"
 # If anything fails from here on, don't leave a half-built version in dist/.
@@ -102,9 +121,9 @@ mkdir "$OUT_DIR"
 
 trap - ERR
 
-echo "  dist/v$VERSION/"
-echo "  dist/v$VERSION.zip  ($(du -h "$OUT_ZIP" | cut -f1))"
+echo "  dist/$LABEL/"
+echo "  dist/$LABEL.zip  ($(du -h "$OUT_ZIP" | cut -f1))"
 echo ""
 echo "Install:"
 echo "  Claude Code:  claude --plugin-dir \"$OUT_DIR\""
-echo "  Cowork:       Claude Desktop > Skills > Personal plugins > + > upload dist/v$VERSION.zip"
+echo "  Cowork:       Claude Desktop > Skills > Personal plugins > + > upload dist/$LABEL.zip"

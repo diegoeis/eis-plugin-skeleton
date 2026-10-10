@@ -45,7 +45,7 @@ my-plugin/
 └── README.md
 ```
 
-`pack.sh` reads `name` and `version` from `src/.claude-plugin/plugin.json`, runs `claude plugin validate`, searches `src/` for the patterns in `scripts/pii-patterns.txt` (a local file, out of git; the template is `pii-patterns.example.txt`) and builds `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. It stops if the version already exists.
+`pack.sh` reads `name` and the version (`version`, else `metadata.release`) from `src/.claude-plugin/plugin.json`, runs `claude plugin validate`, searches `src/` for the patterns in `scripts/pii-patterns.txt` (a local file, out of git; the template is `pii-patterns.example.txt`) and builds `dist/vX.Y.Z/` and `dist/vX.Y.Z.zip`. It stops if the version already exists. Without any version, it builds `dist/<name>/` and `dist/<name>.zip`.
 
 This repository uses the same structure: the plugin lives in `src/`.
 
