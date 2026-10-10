@@ -52,6 +52,13 @@ if [[ -e "$OUT_DIR" || -e "$OUT_ZIP" ]]; then
   die "dist/v$VERSION already exists. Bump \"version\" in src/.claude-plugin/plugin.json before packaging."
 fi
 
+# Claude.ai's marketplace sync rejects a plugin that has another .claude-plugin/plugin.json
+# nested anywhere below its root, and 'claude plugin validate' doesn't catch it.
+NESTED="$(cd "$SRC" && find . -path '*/.claude-plugin/plugin.json' -not -path './.claude-plugin/plugin.json')"
+if [[ -n "$NESTED" ]]; then
+  die "found a nested .claude-plugin/plugin.json inside src/ (Claude.ai marketplace sync rejects it): $NESTED"
+fi
+
 # Validates the plugin with the official CLI, when available.
 if command -v claude >/dev/null 2>&1; then
   echo "Validating src/ with 'claude plugin validate'..."
