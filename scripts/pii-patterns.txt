@@ -1,0 +1,4 @@
+# Padrões que NÃO podem aparecer dentro de src/. Um por linha, regex estendida (grep -E).
+# src/.claude-plugin/plugin.json é ignorado (autoria).
+/Users/diego
+diegoeis@
